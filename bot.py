@@ -58,22 +58,28 @@ def get_user_timezone(user_id: int):
 
 def get_user_language(update: Update) -> str:
     """Get the user's preferred language"""
-    # First try to get from database
-    stored_lang = supabase.get_user_language(update.effective_user.id)
-    if stored_lang:
-        return stored_lang
-    
-    # Then try to detect from Telegram
-    detected_lang = detect_user_language(update)
-    
-    # Store detected language for future use
     try:
-        supabase.set_user_language(update.effective_user.id, detected_lang)
-    except Exception:
-        # If storing fails, just continue
-        pass
-    
-    return detected_lang
+        # First try to get from database
+        stored_lang = supabase.get_user_language(update.effective_user.id)
+        if stored_lang:
+            return stored_lang
+        
+        # Then try to detect from Telegram
+        detected_lang = detect_user_language(update)
+        
+        # Store detected language for future use
+        try:
+            supabase.set_user_language(update.effective_user.id, detected_lang)
+            logger.info(f"Stored language {detected_lang} for user {update.effective_user.id}")
+        except Exception as e:
+            # If storing fails, just continue
+            logger.warning(f"Failed to store language for user {update.effective_user.id}: {e}")
+        
+        return detected_lang
+    except Exception as e:
+        # If anything fails, fall back to English
+        logger.error(f"Error getting user language for user {update.effective_user.id}: {e}")
+        return "en"
 
 
 # ---------------------- Handlers ----------------------

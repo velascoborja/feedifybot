@@ -39,58 +39,78 @@ class SupabaseClient:
 
     def set_user_timezone(self, user_id: int, timezone: str):
         """Set or update the timezone for a user"""
-        data = {
-            "user_id": user_id,
-            "timezone": timezone,
-        }
-        # Use upsert to insert or update
-        return self.supabase.table("user_settings").upsert(data).execute()
+        try:
+            data = {
+                "user_id": user_id,
+                "timezone": timezone,
+            }
+            # Use upsert to insert or update
+            return self.supabase.table("user_settings").upsert(data).execute()
+        except Exception as e:
+            # Log the error but don't crash
+            print(f"Error setting user timezone: {e}")
+            return None
 
     def get_user_timezone(self, user_id: int):
         """Get the timezone for a user, returns None if not set"""
-        response = (
-            self.supabase.table("user_settings")
-            .select("timezone")
-            .eq("user_id", user_id)
-            .execute()
-        )
-        
-        if response.data:
-            return response.data[0]["timezone"]
-        return None
+        try:
+            response = (
+                self.supabase.table("user_settings")
+                .select("timezone")
+                .eq("user_id", user_id)
+                .execute()
+            )
+            
+            if response.data and len(response.data) > 0:
+                return response.data[0].get("timezone")
+            return None
+        except Exception as e:
+            # Log the error but don't crash
+            print(f"Error getting user timezone: {e}")
+            return None
 
     def set_user_language(self, user_id: int, language: str):
         """Set or update the language for a user"""
-        # Get existing settings first
-        existing = (
-            self.supabase.table("user_settings")
-            .select("*")
-            .eq("user_id", user_id)
-            .execute()
-        )
-        
-        if existing.data:
-            # Update existing record
-            data = existing.data[0]
-            data["language"] = language
-            return self.supabase.table("user_settings").update(data).eq("user_id", user_id).execute()
-        else:
-            # Create new record
-            data = {
-                "user_id": user_id,
-                "language": language,
-            }
-            return self.supabase.table("user_settings").insert(data).execute()
+        try:
+            # Get existing settings first
+            existing = (
+                self.supabase.table("user_settings")
+                .select("*")
+                .eq("user_id", user_id)
+                .execute()
+            )
+            
+            if existing.data:
+                # Update existing record
+                data = existing.data[0]
+                data["language"] = language
+                return self.supabase.table("user_settings").update(data).eq("user_id", user_id).execute()
+            else:
+                # Create new record
+                data = {
+                    "user_id": user_id,
+                    "language": language,
+                }
+                return self.supabase.table("user_settings").insert(data).execute()
+        except Exception as e:
+            # Log the error but don't crash
+            print(f"Error setting user language: {e}")
+            return None
 
     def get_user_language(self, user_id: int):
         """Get the language for a user, returns None if not set"""
-        response = (
-            self.supabase.table("user_settings")
-            .select("language")
-            .eq("user_id", user_id)
-            .execute()
-        )
-        
-        if response.data:
-            return response.data[0]["language"]
-        return None
+        try:
+            response = (
+                self.supabase.table("user_settings")
+                .select("language")
+                .eq("user_id", user_id)
+                .execute()
+            )
+            
+            if response.data and len(response.data) > 0:
+                return response.data[0].get("language")
+            return None
+        except Exception as e:
+            # Log the error but don't crash
+            print(f"Error getting user language: {e}")
+            return None
