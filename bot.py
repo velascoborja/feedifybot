@@ -162,6 +162,38 @@ async def timezone_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(message)
 
 
+async def today_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"Today command received from user {update.effective_user.id}")
+    USERS.add(update.effective_user.id)
+    
+    # Get user language
+    user_lang = get_user_language(update)
+    
+    try:
+        # Get today's feeds for the user
+        feeds = supabase.get_daily_feeds(update.effective_user.id, date.today())
+        total = sum(f["amount_ml"] for f in feeds)
+        n_feeds = len(feeds)
+        
+        if n_feeds > 0:
+            # Calculate average
+            average = round(total / n_feeds, 1)
+            message = get_message(user_lang, "today_with_feeds", 
+                                n_feeds=n_feeds, 
+                                total=total, 
+                                average=average)
+        else:
+            message = get_message(user_lang, "today_no_feeds")
+            
+        await update.message.reply_text(message)
+        logger.info(f"Today summary sent to user {update.effective_user.id}: {n_feeds} feeds, {total} ml")
+        
+    except Exception as e:
+        logger.error(f"Error getting today's summary for user {update.effective_user.id}: {e}")
+        message = get_message(user_lang, "feed_error")
+        await update.message.reply_text(message)
+
+
 # ---------------------- Jobs ----------------------
 async def send_daily_summary(context: ContextTypes.DEFAULT_TYPE):
     for user_id in list(USERS):
@@ -196,6 +228,7 @@ def main():
     # Handlers
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("feed", feed))
+    app.add_handler(CommandHandler("today", today_command))
     app.add_handler(CommandHandler("timezone", timezone_command))
 
     # Jobs: daily summary at 21:00 using default timezone

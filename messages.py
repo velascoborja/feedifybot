@@ -3,7 +3,7 @@
 MESSAGES = {
     "en": {
         # Start command
-        "start_message": "👋 Hi! Use /feed <ml> to log a bottle 🍼\n\n⏰ You can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)",
+        "start_message": "👋 Hi! Use /feed <ml> to log a bottle 🍼\n\n📊 Use /today to see today's summary\n⏰ You can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)",
         
         # Feed command
         "feed_usage": "📝 Usage: /feed <ml> (example: /feed 120)",
@@ -21,11 +21,15 @@ MESSAGES = {
         # Daily summary
         "summary_with_feeds": "📊 Today's summary:\n🍼 Feeds: {n_feeds}\n📏 Total: {total} ml",
         "summary_no_feeds": "📅 You haven't logged any feeds today. 🍼",
+        
+        # Today command
+        "today_with_feeds": "📅 Today's feeding report:\n\n🍼 Total feeds: {n_feeds}\n📏 Total volume: {total} ml\n⏰ Average per feed: {average} ml\n\n⭐ Keep up the great work!",
+        "today_no_feeds": "📅 Today's report:\n\n🍼 No feeds logged yet today.\n💡 Use /feed <ml> to log your first bottle!",
     },
     
     "es": {
         # Start command
-        "start_message": "👋 ¡Hola! Usa /feed <ml> para registrar un biberón 🍼\n\n⏰ También puedes configurar tu zona horaria con /timezone <timezone> (ej: /timezone Europe/Madrid)",
+        "start_message": "👋 ¡Hola! Usa /feed <ml> para registrar un biberón 🍼\n\n📊 Usa /today para ver el resumen de hoy\n⏰ También puedes configurar tu zona horaria con /timezone <timezone> (ej: /timezone Europe/Madrid)",
         
         # Feed command
         "feed_usage": "📝 Uso: /feed <ml> (ejemplo: /feed 120)",
@@ -43,11 +47,15 @@ MESSAGES = {
         # Daily summary
         "summary_with_feeds": "📊 Resumen de hoy:\n🍼 Tomas: {n_feeds}\n📏 Total: {total} ml",
         "summary_no_feeds": "📅 Hoy no has registrado ninguna alimentación. 🍼",
+        
+        # Today command
+        "today_with_feeds": "📅 Reporte de alimentación de hoy:\n\n🍼 Total de tomas: {n_feeds}\n📏 Volumen total: {total} ml\n⏰ Promedio por toma: {average} ml\n\n⭐ ¡Sigue así de bien!",
+        "today_no_feeds": "📅 Reporte de hoy:\n\n🍼 Aún no has registrado tomas hoy.\n💡 ¡Usa /feed <ml> para registrar tu primer biberón!",
     },
     
     "fr": {
         # Start command
-        "start_message": "👋 Salut! Utilisez /feed <ml> pour enregistrer un biberon 🍼\n\n⏰ Vous pouvez aussi définir votre fuseau horaire avec /timezone <timezone> (ex: /timezone Europe/Paris)",
+        "start_message": "👋 Salut! Utilisez /feed <ml> pour enregistrer un biberon 🍼\n\n📊 Utilisez /today pour voir le résumé d'aujourd'hui\n⏰ Vous pouvez aussi définir votre fuseau horaire avec /timezone <timezone> (ex: /timezone Europe/Paris)",
         
         # Feed command
         "feed_usage": "📝 Usage: /feed <ml> (exemple: /feed 120)",
@@ -65,11 +73,15 @@ MESSAGES = {
         # Daily summary
         "summary_with_feeds": "📊 Résumé d'aujourd'hui:\n🍼 Alimentations: {n_feeds}\n📏 Total: {total} ml",
         "summary_no_feeds": "📅 Vous n'avez enregistré aucune alimentation aujourd'hui. 🍼",
+        
+        # Today command
+        "today_with_feeds": "📅 Rapport d'alimentation d'aujourd'hui:\n\n🍼 Total d'alimentations: {n_feeds}\n📏 Volume total: {total} ml\n⏰ Moyenne par alimentation: {average} ml\n\n⭐ Continuez comme ça!",
+        "today_no_feeds": "📅 Rapport d'aujourd'hui:\n\n🍼 Aucune alimentation enregistrée aujourd'hui.\n💡 Utilisez /feed <ml> pour enregistrer votre premier biberon!",
     },
     
     "it": {
         # Start command
-        "start_message": "👋 Ciao! Usa /feed <ml> per registrare un biberon 🍼\n\n⏰ Puoi anche impostare il tuo fuso orario con /timezone <timezone> (es: /timezone Europe/Rome)",
+        "start_message": "👋 Ciao! Usa /feed <ml> per registrare un biberon 🍼\n\n📊 Usa /today per vedere il riassunto di oggi\n⏰ Puoi anche impostare il tuo fuso orario con /timezone <timezone> (es: /timezone Europe/Rome)",
         
         # Feed command
         "feed_usage": "📝 Uso: /feed <ml> (esempio: /feed 120)",
@@ -87,6 +99,10 @@ MESSAGES = {
         # Daily summary
         "summary_with_feeds": "📊 Riepilogo di oggi:\n🍼 Alimentazioni: {n_feeds}\n📏 Totale: {total} ml",
         "summary_no_feeds": "📅 Non hai registrato nessuna alimentazione oggi. 🍼",
+        
+        # Today command
+        "today_with_feeds": "📅 Rapporto alimentazione di oggi:\n\n🍼 Totale alimentazioni: {n_feeds}\n📏 Volume totale: {total} ml\n⏰ Media per alimentazione: {average} ml\n\n⭐ Continua così!",
+        "today_no_feeds": "📅 Rapporto di oggi:\n\n🍼 Nessuna alimentazione registrata oggi.\n💡 Usa /feed <ml> per registrare il tuo primo biberon!",
     }
 }
 
