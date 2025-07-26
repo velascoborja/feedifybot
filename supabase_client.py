@@ -23,10 +23,26 @@ class SupabaseClient:
     def get_daily_feeds(self, user_id: int, day: date):
         """Get all feedings for a specific user on a specific day"""
         try:
-            # Convert date to string in ISO format for the query
+            # Convert date to string in ISO format
             day_str = day.isoformat()
             
-            # Get all feeds for this user
+            # Try using PostgreSQL date function for better timezone handling
+            try:
+                response = (
+                    self.supabase.table("feeds")
+                    .select("*")
+                    .eq("user_id", user_id)
+                    .gte("created_at", f"{day_str}")
+                    .lt("created_at", f"{day_str} 23:59:59.999")
+                    .execute()
+                )
+                
+                if response.data:
+                    return response.data
+            except Exception as e:
+                print(f"Database query failed, falling back to Python filtering: {e}")
+            
+            # Fallback: Get all feeds and filter in Python
             response = (
                 self.supabase.table("feeds")
                 .select("*")
@@ -36,15 +52,30 @@ class SupabaseClient:
             
             all_feeds = response.data if response.data else []
             
-            # Filter by date in Python to avoid timezone issues
+            # Filter by date in Python to handle timezone issues properly
             today_feeds = []
             for feed in all_feeds:
                 created_at = feed.get('created_at', '')
                 if created_at:
-                    # Extract just the date part (YYYY-MM-DD)
-                    feed_date = created_at.split('T')[0] if 'T' in created_at else created_at.split(' ')[0]
-                    if feed_date == day_str:
-                        today_feeds.append(feed)
+                    try:
+                        # Parse the timestamp and extract date
+                        if 'T' in created_at:
+                            # ISO format with time
+                            timestamp_part = created_at.split('T')[0]
+                        elif ' ' in created_at:
+                            # Space-separated format
+                            timestamp_part = created_at.split(' ')[0]
+                        else:
+                            # Just date
+                            timestamp_part = created_at
+                        
+                        # Compare dates
+                        if timestamp_part == day_str:
+                            today_feeds.append(feed)
+                        
+                    except Exception as e:
+                        # If date parsing fails, skip this feed
+                        continue
             
             return today_feeds
         except Exception as e:
