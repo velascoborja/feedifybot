@@ -9,6 +9,7 @@ from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
     ContextTypes,
+    JobQueue,
 )
 
 from supabase_client import SupabaseClient
@@ -72,6 +73,7 @@ async def main():
     app = (
         ApplicationBuilder()
         .token(TELEGRAM_BOT_TOKEN)
+        .job_queue(JobQueue())
         .build()
     )
 
