@@ -38,15 +38,28 @@ supabase = SupabaseClient()
 # Keep a set of users who have used the bot
 USERS: set[int] = set()
 
-# Timezone for scheduled summary (adjust if needed)
-TZ = ZoneInfo("Europe/Madrid")
+# Default timezone (used if user hasn't set a custom one)
+DEFAULT_TZ = ZoneInfo("Europe/Madrid")
+
+
+# ---------------------- Helper Functions ----------------------
+def get_user_timezone(user_id: int):
+    """Get the user's timezone or return default"""
+    user_tz = supabase.get_user_timezone(user_id)
+    if user_tz:
+        try:
+            return ZoneInfo(user_tz)
+        except Exception:
+            # If invalid timezone, return default
+            return DEFAULT_TZ
+    return DEFAULT_TZ
 
 
 # ---------------------- Handlers ----------------------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info(f"Start command received from user {update.effective_user.id}")
     USERS.add(update.effective_user.id)
-    await update.message.reply_text("Hi! Use /feed <ml> to log a bottle.")
+    await update.message.reply_text("Hi! Use /feed <ml> to log a bottle.\n\nYou can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)")
 
 
 async def feed(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -72,9 +85,41 @@ async def feed(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Sorry, there was an error logging your feed. Please try again.")
 
 
+async def timezone_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"Timezone command received from user {update.effective_user.id}")
+    USERS.add(update.effective_user.id)
+
+    if not context.args:
+        # Show current timezone
+        current_tz = supabase.get_user_timezone(update.effective_user.id)
+        if current_tz:
+            await update.message.reply_text(f"Your current timezone is: {current_tz}")
+        else:
+            await update.message.reply_text(f"You haven't set a timezone. Using default: Europe/Madrid\n\nTo set your timezone, use: /timezone <timezone>\nExample: /timezone America/New_York")
+        return
+
+    timezone_str = context.args[0]
+    
+    # Validate timezone
+    try:
+        ZoneInfo(timezone_str)
+    except Exception:
+        await update.message.reply_text(f"Invalid timezone: {timezone_str}\n\nPlease use a valid timezone like:\n- Europe/Madrid\n- America/New_York\n- Asia/Tokyo\n- UTC")
+        return
+
+    try:
+        supabase.set_user_timezone(update.effective_user.id, timezone_str)
+        await update.message.reply_text(f"Timezone set to: {timezone_str}")
+        logger.info(f"Timezone set to {timezone_str} for user {update.effective_user.id}")
+    except Exception as e:
+        logger.error(f"Error setting timezone: {e}")
+        await update.message.reply_text("Sorry, there was an error setting your timezone. Please try again.")
+
+
 # ---------------------- Jobs ----------------------
 async def send_daily_summary(context: ContextTypes.DEFAULT_TYPE):
     for user_id in list(USERS):
+        user_tz = get_user_timezone(user_id)
         feeds = supabase.get_daily_feeds(user_id, date.today())
         total = sum(f["amount_ml"] for f in feeds)
         n_feeds = len(feeds)
@@ -101,9 +146,11 @@ def main():
     # Handlers
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("feed", feed))
+    app.add_handler(CommandHandler("timezone", timezone_command))
 
-    # Jobs: daily summary at 21:00 Europe/Madrid
-    app.job_queue.run_daily(send_daily_summary, time=time(hour=21, minute=0, tzinfo=TZ))
+    # Jobs: daily summary at 21:00 using default timezone
+    # Note: Each user will get the summary based on their timezone
+    app.job_queue.run_daily(send_daily_summary, time=time(hour=21, minute=0, tzinfo=DEFAULT_TZ))
 
     logger.info("Starting bot...")
     app.run_polling()

@@ -36,3 +36,25 @@ class SupabaseClient:
         )
         
         return response.data
+
+    def set_user_timezone(self, user_id: int, timezone: str):
+        """Set or update the timezone for a user"""
+        data = {
+            "user_id": user_id,
+            "timezone": timezone,
+        }
+        # Use upsert to insert or update
+        return self.supabase.table("user_settings").upsert(data).execute()
+
+    def get_user_timezone(self, user_id: int):
+        """Get the timezone for a user, returns None if not set"""
+        response = (
+            self.supabase.table("user_settings")
+            .select("timezone")
+            .eq("user_id", user_id)
+            .execute()
+        )
+        
+        if response.data:
+            return response.data[0]["timezone"]
+        return None
