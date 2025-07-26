@@ -340,7 +340,7 @@ async def send_daily_summary_to_user(context: ContextTypes.DEFAULT_TYPE):
     user_lang = supabase.get_user_language(user_id) or "en"
     
     feeds = supabase.get_daily_feeds(user_id, date.today())
-    total = sum(f["amount_ml"] for f in feeds)
+    total = sum(f.get("amount_ml", 0) for f in feeds)
     n_feeds = len(feeds)
     
     if n_feeds > 0:

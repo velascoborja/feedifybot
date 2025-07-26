@@ -23,26 +23,19 @@ class SupabaseClient:
     def get_daily_feeds(self, user_id: int, day: date):
         """Get all feedings for a specific user on a specific day"""
         try:
-            # Convert date to string in ISO format
-            day_str = day.isoformat()
+            # First, let's get all feeds to see what columns exist
+            response = (
+                self.supabase.table("feeds")
+                .select("*")
+                .eq("user_id", user_id)
+                .limit(1)
+                .execute()
+            )
             
-            # Try using PostgreSQL date function for better timezone handling
-            try:
-                response = (
-                    self.supabase.table("feeds")
-                    .select("*")
-                    .eq("user_id", user_id)
-                    .gte("created_at", f"{day_str}")
-                    .lt("created_at", f"{day_str} 23:59:59.999")
-                    .execute()
-                )
-                
-                if response.data:
-                    return response.data
-            except Exception as e:
-                print(f"Database query failed, falling back to Python filtering: {e}")
+            if response.data:
+                print(f"Available columns in feeds table: {list(response.data[0].keys())}")
             
-            # Fallback: Get all feeds and filter in Python
+            # Get all feeds for this user
             response = (
                 self.supabase.table("feeds")
                 .select("*")
@@ -51,33 +44,51 @@ class SupabaseClient:
             )
             
             all_feeds = response.data if response.data else []
+            print(f"Total feeds found for user {user_id}: {len(all_feeds)}")
             
-            # Filter by date in Python to handle timezone issues properly
+            # If no timestamp column exists, return all feeds for now
+            if not all_feeds:
+                return []
+            
+            # Check what date/time columns are available
+            sample_feed = all_feeds[0]
+            date_columns = []
+            for key in sample_feed.keys():
+                if any(word in key.lower() for word in ['created', 'date', 'time', 'timestamp']):
+                    date_columns.append(key)
+            
+            print(f"Potential date columns found: {date_columns}")
+            
+            # If no date column found, return all feeds (needs manual filtering)
+            if not date_columns:
+                print("No date columns found, returning all feeds")
+                return all_feeds
+            
+            # Try to filter by the first date column found
+            date_column = date_columns[0]
+            day_str = day.isoformat()
+            
             today_feeds = []
             for feed in all_feeds:
-                created_at = feed.get('created_at', '')
-                if created_at:
+                date_value = feed.get(date_column, '')
+                if date_value:
                     try:
-                        # Parse the timestamp and extract date
-                        if 'T' in created_at:
-                            # ISO format with time
-                            timestamp_part = created_at.split('T')[0]
-                        elif ' ' in created_at:
-                            # Space-separated format
-                            timestamp_part = created_at.split(' ')[0]
+                        # Extract date part
+                        if 'T' in str(date_value):
+                            feed_date = str(date_value).split('T')[0]
+                        elif ' ' in str(date_value):
+                            feed_date = str(date_value).split(' ')[0]
                         else:
-                            # Just date
-                            timestamp_part = created_at
+                            feed_date = str(date_value)
                         
-                        # Compare dates
-                        if timestamp_part == day_str:
+                        if feed_date == day_str:
                             today_feeds.append(feed)
-                        
                     except Exception as e:
-                        # If date parsing fails, skip this feed
                         continue
             
+            print(f"Feeds found for {day_str}: {len(today_feeds)}")
             return today_feeds
+            
         except Exception as e:
             print(f"Error getting daily feeds: {e}")
             return []
@@ -89,7 +100,6 @@ class SupabaseClient:
                 self.supabase.table("feeds")
                 .select("*")
                 .eq("user_id", user_id)
-                .order("created_at", desc=True)
                 .execute()
             )
             
