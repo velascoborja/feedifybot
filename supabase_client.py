@@ -10,21 +10,53 @@ from telegram.ext import (
     CommandHandler,
     ContextTypes,
 )
-
-from supabase_client import SupabaseClient
+from supabase import create_client, Client
 
 # Load environment variables
 load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # Supabase integration
-supabase = SupabaseClient()
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Keep a set of users who have used the bot
 USERS: set[int] = set()
 
 # Timezone for scheduled summary (adjust if needed)
 TZ = ZoneInfo("Europe/Madrid")
+
+
+# Supabase client class
+class SupabaseClient:
+    def __init__(self):
+        self.supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    def register_feed(self, user_id: int, amount_ml: int):
+        """Register a new feeding in the database"""
+        data = {
+            "user_id": user_id,
+            "amount_ml": amount_ml,
+        }
+        return self.supabase.table("feeds").insert(data).execute()
+
+    def get_daily_feeds(self, user_id: int, day: date):
+        """Get all feedings for a specific user on a specific day"""
+        # Convert date to string in ISO format for the query
+        day_str = day.isoformat()
+
+        # Query feeds for this user on this day
+        response = (
+            self.supabase.table("feeds")
+            .select("*")
+            .eq("user_id", user_id)
+            .gte("created_at", f"{day_str}T00:00:00")
+            .lt("created_at", f"{day_str}T23:59:59")
+            .execute()
+        )
+
+        return response.data
 
 
 # ---------------------- Handlers ----------------------
