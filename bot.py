@@ -1,5 +1,6 @@
 import os
 import asyncio
+import logging
 from datetime import date, time
 from zoneinfo import ZoneInfo
 
@@ -14,9 +15,22 @@ from telegram.ext import (
 
 from supabase_client import SupabaseClient
 
+# Configure logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
 # Load environment variables
 load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+if not TELEGRAM_BOT_TOKEN:
+    logger.error("TELEGRAM_BOT_TOKEN not found in environment variables")
+    exit(1)
+
+logger.info("Bot starting...")
 
 # Supabase integration
 supabase = SupabaseClient()
@@ -30,11 +44,13 @@ TZ = ZoneInfo("Europe/Madrid")
 
 # ---------------------- Handlers ----------------------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"Start command received from user {update.effective_user.id}")
     USERS.add(update.effective_user.id)
     await update.message.reply_text("Hi! Use /feed <ml> to log a bottle.")
 
 
 async def feed(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"Feed command received from user {update.effective_user.id}")
     USERS.add(update.effective_user.id)
 
     if not context.args:
@@ -47,8 +63,13 @@ async def feed(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Value must be an integer. Example: /feed 120")
         return
 
-    supabase.register_feed(update.effective_user.id, amount_ml)
-    await update.message.reply_text(f"Feed logged: {amount_ml} ml")
+    try:
+        supabase.register_feed(update.effective_user.id, amount_ml)
+        await update.message.reply_text(f"Feed logged: {amount_ml} ml")
+        logger.info(f"Feed logged: {amount_ml} ml for user {update.effective_user.id}")
+    except Exception as e:
+        logger.error(f"Error logging feed: {e}")
+        await update.message.reply_text("Sorry, there was an error logging your feed. Please try again.")
 
 
 # ---------------------- Jobs ----------------------
