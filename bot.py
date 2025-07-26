@@ -5,12 +5,15 @@ from datetime import date, time
 from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
     ContextTypes,
     JobQueue,
+    CallbackQueryHandler,
+    MessageHandler,
+    filters,
 )
 
 from supabase_client import SupabaseClient
@@ -38,6 +41,9 @@ supabase = SupabaseClient()
 
 # Keep a set of users who have used the bot
 USERS: set[int] = set()
+
+# User conversation states
+USER_STATES: dict[int, str] = {}
 
 # Default timezone (used if user hasn't set a custom one)
 DEFAULT_TZ = ZoneInfo("Europe/Madrid")
@@ -194,26 +200,203 @@ async def today_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(message)
 
 
-# ---------------------- Jobs ----------------------
-async def send_daily_summary(context: ContextTypes.DEFAULT_TYPE):
-    for user_id in list(USERS):
+async def setup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"Setup command received from user {update.effective_user.id}")
+    USERS.add(update.effective_user.id)
+    
+    # Get user language
+    user_lang = get_user_language(update)
+    
+    # Create inline keyboard with setup options
+    keyboard = [
+        [InlineKeyboardButton(
+            get_message(user_lang, "setup_reminder_button"), 
+            callback_data="setup_reminder"
+        )]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    message = get_message(user_lang, "setup_menu")
+    await update.message.reply_text(message, reply_markup=reply_markup)
+
+
+async def handle_setup_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle callback from setup menu buttons"""
+    query = update.callback_query
+    await query.answer()
+    
+    user_id = query.from_user.id
+    user_lang = supabase.get_user_language(user_id) or "en"
+    
+    if query.data == "setup_reminder":
+        # Show current reminder time if set
+        current_time = supabase.get_user_reminder_time(user_id)
+        if current_time:
+            current_msg = get_message(user_lang, "setup_reminder_current", time=current_time)
+            await query.edit_message_text(current_msg)
+        
+        # Set user state to waiting for reminder time
+        USER_STATES[user_id] = "waiting_reminder_time"
+        
+        # Ask for new time
+        message = get_message(user_lang, "setup_reminder_prompt")
+        await context.bot.send_message(chat_id=user_id, text=message)
+
+
+async def handle_reminder_time_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle user input for reminder time"""
+    user_id = update.effective_user.id
+    user_lang = get_user_language(update)
+    
+    # Check if user is in the right state
+    if USER_STATES.get(user_id) != "waiting_reminder_time":
+        return
+    
+    time_input = update.message.text.strip()
+    
+    # Validate time format (HH:MM)
+    import re
+    time_pattern = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'
+    
+    if not re.match(time_pattern, time_input):
+        message = get_message(user_lang, "setup_reminder_invalid")
+        await update.message.reply_text(message)
+        return
+    
+    try:
+        # Save the reminder time
+        supabase.set_user_reminder_time(user_id, time_input)
+        
+        # Clear user state
+        if user_id in USER_STATES:
+            del USER_STATES[user_id]
+        
+        # Reschedule the reminder for this user
+        reschedule_user_reminder(context.application, user_id)
+        
+        message = get_message(user_lang, "setup_reminder_set", time=time_input)
+        await update.message.reply_text(message)
+        
+        logger.info(f"Reminder time set to {time_input} for user {user_id}")
+        
+    except Exception as e:
+        logger.error(f"Error setting reminder time for user {user_id}: {e}")
+        message = get_message(user_lang, "setup_reminder_error")
+        await update.message.reply_text(message)
+
+
+def reschedule_user_reminder(app, user_id: int):
+    """Reschedule reminder for a specific user"""
+    try:
+        reminder_time = supabase.get_user_reminder_time(user_id)
         user_tz = get_user_timezone(user_id)
-        user_lang = supabase.get_user_language(user_id) or "en"
         
-        feeds = supabase.get_daily_feeds(user_id, date.today())
-        total = sum(f["amount_ml"] for f in feeds)
-        n_feeds = len(feeds)
+        # Create a unique job name for this user
+        job_name = f"daily_summary_{user_id}"
         
-        if n_feeds > 0:
-            text = get_message(user_lang, "summary_with_feeds", n_feeds=n_feeds, total=total)
-        else:
-            text = get_message(user_lang, "summary_no_feeds")
+        # Remove existing job if it exists
+        current_jobs = app.job_queue.get_jobs_by_name(job_name)
+        for job in current_jobs:
+            job.schedule_removal()
+        
+        if reminder_time:
+            # Parse the time string (HH:MM)
+            hour, minute = map(int, reminder_time.split(':'))
             
+            # Schedule new job
+            app.job_queue.run_daily(
+                send_daily_summary_to_user,
+                time=time(hour=hour, minute=minute, tzinfo=user_tz),
+                data={'user_id': user_id},
+                name=job_name
+            )
+            logger.info(f"Rescheduled daily reminder for user {user_id} at {reminder_time} ({user_tz})")
+        else:
+            # Use default time if no custom time is set
+            app.job_queue.run_daily(
+                send_daily_summary_to_user,
+                time=time(hour=21, minute=0, tzinfo=user_tz),
+                data={'user_id': user_id},
+                name=job_name
+            )
+            logger.info(f"Rescheduled default daily reminder for user {user_id} at 21:00 ({user_tz})")
+            
+    except Exception as e:
+        logger.error(f"Error rescheduling reminder for user {user_id}: {e}")
+
+
+# ---------------------- Jobs ----------------------
+async def send_daily_summary_to_user(context: ContextTypes.DEFAULT_TYPE):
+    """Send daily summary to a specific user"""
+    job_context = context.job.data
+    user_id = job_context['user_id']
+    
+    user_tz = get_user_timezone(user_id)
+    user_lang = supabase.get_user_language(user_id) or "en"
+    
+    feeds = supabase.get_daily_feeds(user_id, date.today())
+    total = sum(f["amount_ml"] for f in feeds)
+    n_feeds = len(feeds)
+    
+    if n_feeds > 0:
+        text = get_message(user_lang, "summary_with_feeds", n_feeds=n_feeds, total=total)
+    else:
+        text = get_message(user_lang, "summary_no_feeds")
+        
+    try:
+        await context.bot.send_message(chat_id=user_id, text=text)
+        logger.info(f"Daily summary sent to user {user_id}: {n_feeds} feeds, {total} ml")
+    except Exception as e:
+        logger.error(f"Error sending daily summary to user {user_id}: {e}")
+
+
+def schedule_user_reminders(app):
+    """Schedule daily reminders for all users based on their individual settings"""
+    for user_id in USERS:
         try:
-            await context.bot.send_message(chat_id=user_id, text=text)
-        except Exception:
-            # The user may have blocked the bot, etc.
-            pass
+            reminder_time = supabase.get_user_reminder_time(user_id)
+            user_tz = get_user_timezone(user_id)
+            
+            if reminder_time:
+                # Parse the time string (HH:MM)
+                hour, minute = map(int, reminder_time.split(':'))
+                
+                # Create a unique job name for this user
+                job_name = f"daily_summary_{user_id}"
+                
+                # Remove existing job if it exists
+                current_jobs = app.job_queue.get_jobs_by_name(job_name)
+                for job in current_jobs:
+                    job.schedule_removal()
+                
+                # Schedule new job
+                app.job_queue.run_daily(
+                    send_daily_summary_to_user,
+                    time=time(hour=hour, minute=minute, tzinfo=user_tz),
+                    data={'user_id': user_id},
+                    name=job_name
+                )
+                logger.info(f"Scheduled daily reminder for user {user_id} at {reminder_time} ({user_tz})")
+            else:
+                # Use default time if no custom time is set
+                job_name = f"daily_summary_{user_id}"
+                
+                # Remove existing job if it exists
+                current_jobs = app.job_queue.get_jobs_by_name(job_name)
+                for job in current_jobs:
+                    job.schedule_removal()
+                
+                # Schedule with default time
+                app.job_queue.run_daily(
+                    send_daily_summary_to_user,
+                    time=time(hour=21, minute=0, tzinfo=user_tz),
+                    data={'user_id': user_id},
+                    name=job_name
+                )
+                logger.info(f"Scheduled default daily reminder for user {user_id} at 21:00 ({user_tz})")
+                
+        except Exception as e:
+            logger.error(f"Error scheduling reminder for user {user_id}: {e}")
 
 
 # ---------------------- Main ----------------------
@@ -229,11 +412,17 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("feed", feed))
     app.add_handler(CommandHandler("today", today_command))
+    app.add_handler(CommandHandler("setup", setup_command))
     app.add_handler(CommandHandler("timezone", timezone_command))
+    
+    # Callback query handler for inline buttons
+    app.add_handler(CallbackQueryHandler(handle_setup_callback))
+    
+    # Message handler for reminder time input
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_reminder_time_input))
 
-    # Jobs: daily summary at 21:00 using default timezone
-    # Note: Each user will get the summary based on their timezone
-    app.job_queue.run_daily(send_daily_summary, time=time(hour=21, minute=0, tzinfo=DEFAULT_TZ))
+    # Schedule individual reminders for users
+    schedule_user_reminders(app)
 
     logger.info("Starting bot...")
     app.run_polling()

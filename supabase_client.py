@@ -114,3 +114,49 @@ class SupabaseClient:
             # Log the error but don't crash
             print(f"Error getting user language: {e}")
             return None
+
+    def set_user_reminder_time(self, user_id: int, reminder_time: str):
+        """Set or update the reminder time for a user (HH:MM format)"""
+        try:
+            # Get existing settings first
+            existing = (
+                self.supabase.table("user_settings")
+                .select("*")
+                .eq("user_id", user_id)
+                .execute()
+            )
+            
+            if existing.data:
+                # Update existing record
+                data = existing.data[0]
+                data["reminder_time"] = reminder_time
+                return self.supabase.table("user_settings").update(data).eq("user_id", user_id).execute()
+            else:
+                # Create new record
+                data = {
+                    "user_id": user_id,
+                    "reminder_time": reminder_time,
+                }
+                return self.supabase.table("user_settings").insert(data).execute()
+        except Exception as e:
+            # Log the error but don't crash
+            print(f"Error setting user reminder time: {e}")
+            return None
+
+    def get_user_reminder_time(self, user_id: int):
+        """Get the reminder time for a user, returns None if not set"""
+        try:
+            response = (
+                self.supabase.table("user_settings")
+                .select("reminder_time")
+                .eq("user_id", user_id)
+                .execute()
+            )
+            
+            if response.data and len(response.data) > 0:
+                return response.data[0].get("reminder_time")
+            return None
+        except Exception as e:
+            # Log the error but don't crash
+            print(f"Error getting user reminder time: {e}")
+            return None

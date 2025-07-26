@@ -3,7 +3,7 @@
 MESSAGES = {
     "en": {
         # Start command
-        "start_message": "👋 Hi! Use /feed <ml> to log a bottle 🍼\n\n📊 Use /today to see today's summary\n⏰ You can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)",
+        "start_message": "👋 Hi! Use /feed <ml> to log a bottle 🍼\n\n📊 Use /today to see today's summary\n⚙️ Use /setup to configure bot settings\n⏰ You can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)",
         
         # Feed command
         "feed_usage": "📝 Usage: /feed <ml> (example: /feed 120)",
@@ -25,11 +25,20 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Today's feeding report:\n\n🍼 Total feeds: {n_feeds}\n📏 Total volume: {total} ml\n⏰ Average per feed: {average} ml\n\n⭐ Keep up the great work!",
         "today_no_feeds": "📅 Today's report:\n\n🍼 No feeds logged yet today.\n💡 Use /feed <ml> to log your first bottle!",
+        
+        # Setup command
+        "setup_menu": "⚙️ Bot Setup\n\nChoose what you want to configure:",
+        "setup_reminder_button": "⏰ Change daily reminder time",
+        "setup_reminder_prompt": "⏰ What time would you like to receive your daily summary?\n\n📝 Please send the time in 24-hour format (HH:MM)\n📍 Examples: 21:00, 09:30, 18:15",
+        "setup_reminder_invalid": "❌ Invalid time format. Please use HH:MM format (24-hour)\n📍 Examples: 21:00, 09:30, 18:15",
+        "setup_reminder_set": "✅ Daily reminder set to: {time} 🕐\n\n📅 You'll receive your daily summary at this time every day!",
+        "setup_reminder_current": "🕐 Your current daily reminder time is: {time}",
+        "setup_reminder_error": "😔 Sorry, there was an error setting your reminder time. Please try again.",
     },
     
     "es": {
         # Start command
-        "start_message": "👋 ¡Hola! Usa /feed <ml> para registrar un biberón 🍼\n\n📊 Usa /today para ver el resumen de hoy\n⏰ También puedes configurar tu zona horaria con /timezone <timezone> (ej: /timezone Europe/Madrid)",
+        "start_message": "👋 ¡Hola! Usa /feed <ml> para registrar un biberón 🍼\n\n📊 Usa /today para ver el resumen de hoy\n⚙️ Usa /setup para configurar el bot\n⏰ También puedes configurar tu zona horaria con /timezone <timezone> (ej: /timezone Europe/Madrid)",
         
         # Feed command
         "feed_usage": "📝 Uso: /feed <ml> (ejemplo: /feed 120)",
@@ -51,11 +60,20 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Reporte de alimentación de hoy:\n\n🍼 Total de tomas: {n_feeds}\n📏 Volumen total: {total} ml\n⏰ Promedio por toma: {average} ml\n\n⭐ ¡Sigue así de bien!",
         "today_no_feeds": "📅 Reporte de hoy:\n\n🍼 Aún no has registrado tomas hoy.\n💡 ¡Usa /feed <ml> para registrar tu primer biberón!",
+        
+        # Setup command
+        "setup_menu": "⚙️ Configuración del Bot\n\nElige qué quieres configurar:",
+        "setup_reminder_button": "⏰ Cambiar hora del recordatorio diario",
+        "setup_reminder_prompt": "⏰ ¿A qué hora quieres recibir tu resumen diario?\n\n📝 Por favor envía la hora en formato 24 horas (HH:MM)\n📍 Ejemplos: 21:00, 09:30, 18:15",
+        "setup_reminder_invalid": "❌ Formato de hora inválido. Por favor usa el formato HH:MM (24 horas)\n📍 Ejemplos: 21:00, 09:30, 18:15",
+        "setup_reminder_set": "✅ Recordatorio diario configurado a las: {time} 🕐\n\n📅 ¡Recibirás tu resumen diario a esta hora todos los días!",
+        "setup_reminder_current": "🕐 Tu hora actual del recordatorio diario es: {time}",
+        "setup_reminder_error": "😔 Lo siento, hubo un error al configurar tu hora de recordatorio. Por favor, inténtalo de nuevo.",
     },
     
     "fr": {
         # Start command
-        "start_message": "👋 Salut! Utilisez /feed <ml> pour enregistrer un biberon 🍼\n\n📊 Utilisez /today pour voir le résumé d'aujourd'hui\n⏰ Vous pouvez aussi définir votre fuseau horaire avec /timezone <timezone> (ex: /timezone Europe/Paris)",
+        "start_message": "👋 Salut! Utilisez /feed <ml> pour enregistrer un biberon 🍼\n\n📊 Utilisez /today pour voir le résumé d'aujourd'hui\n⚙️ Utilisez /setup pour configurer le bot\n⏰ Vous pouvez aussi définir votre fuseau horaire avec /timezone <timezone> (ex: /timezone Europe/Paris)",
         
         # Feed command
         "feed_usage": "📝 Usage: /feed <ml> (exemple: /feed 120)",
@@ -77,11 +95,20 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Rapport d'alimentation d'aujourd'hui:\n\n🍼 Total d'alimentations: {n_feeds}\n📏 Volume total: {total} ml\n⏰ Moyenne par alimentation: {average} ml\n\n⭐ Continuez comme ça!",
         "today_no_feeds": "📅 Rapport d'aujourd'hui:\n\n🍼 Aucune alimentation enregistrée aujourd'hui.\n💡 Utilisez /feed <ml> pour enregistrer votre premier biberon!",
+        
+        # Setup command
+        "setup_menu": "⚙️ Configuration du Bot\n\nChoisissez ce que vous voulez configurer:",
+        "setup_reminder_button": "⏰ Changer l'heure du rappel quotidien",
+        "setup_reminder_prompt": "⏰ À quelle heure souhaitez-vous recevoir votre résumé quotidien?\n\n📝 Veuillez envoyer l'heure au format 24 heures (HH:MM)\n📍 Exemples: 21:00, 09:30, 18:15",
+        "setup_reminder_invalid": "❌ Format d'heure invalide. Veuillez utiliser le format HH:MM (24 heures)\n📍 Exemples: 21:00, 09:30, 18:15",
+        "setup_reminder_set": "✅ Rappel quotidien configuré à: {time} 🕐\n\n📅 Vous recevrez votre résumé quotidien à cette heure chaque jour!",
+        "setup_reminder_current": "🕐 Votre heure actuelle de rappel quotidien est: {time}",
+        "setup_reminder_error": "😔 Désolé, il y a eu une erreur lors de la configuration de votre heure de rappel. Veuillez réessayer.",
     },
     
     "it": {
         # Start command
-        "start_message": "👋 Ciao! Usa /feed <ml> per registrare un biberon 🍼\n\n📊 Usa /today per vedere il riassunto di oggi\n⏰ Puoi anche impostare il tuo fuso orario con /timezone <timezone> (es: /timezone Europe/Rome)",
+        "start_message": "👋 Ciao! Usa /feed <ml> per registrare un biberon 🍼\n\n📊 Usa /today per vedere il riassunto di oggi\n⚙️ Usa /setup per configurare il bot\n⏰ Puoi anche impostare il tuo fuso orario con /timezone <timezone> (es: /timezone Europe/Rome)",
         
         # Feed command
         "feed_usage": "📝 Uso: /feed <ml> (esempio: /feed 120)",
@@ -103,6 +130,15 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Rapporto alimentazione di oggi:\n\n🍼 Totale alimentazioni: {n_feeds}\n📏 Volume totale: {total} ml\n⏰ Media per alimentazione: {average} ml\n\n⭐ Continua così!",
         "today_no_feeds": "📅 Rapporto di oggi:\n\n🍼 Nessuna alimentazione registrata oggi.\n💡 Usa /feed <ml> per registrare il tuo primo biberon!",
+        
+        # Setup command
+        "setup_menu": "⚙️ Configurazione Bot\n\nScegli cosa vuoi configurare:",
+        "setup_reminder_button": "⏰ Cambia orario promemoria giornaliero",
+        "setup_reminder_prompt": "⏰ A che ora vuoi ricevere il tuo riassunto giornaliero?\n\n📝 Per favore invia l'ora in formato 24 ore (HH:MM)\n📍 Esempi: 21:00, 09:30, 18:15",
+        "setup_reminder_invalid": "❌ Formato ora non valido. Per favore usa il formato HH:MM (24 ore)\n📍 Esempi: 21:00, 09:30, 18:15",
+        "setup_reminder_set": "✅ Promemoria giornaliero impostato alle: {time} 🕐\n\n📅 Riceverai il tuo riassunto giornaliero a quest'ora ogni giorno!",
+        "setup_reminder_current": "🕐 Il tuo orario attuale del promemoria giornaliero è: {time}",
+        "setup_reminder_error": "😔 Spiacente, c'è stato un errore nell'impostare il tuo orario di promemoria. Riprova.",
     }
 }
 

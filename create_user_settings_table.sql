@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS user_settings (
     user_id BIGINT PRIMARY KEY,
     timezone TEXT,
     language TEXT,
+    reminder_time TEXT, -- Format: HH:MM (24-hour format)
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
