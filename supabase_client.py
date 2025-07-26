@@ -22,20 +22,29 @@ class SupabaseClient:
 
     def get_daily_feeds(self, user_id: int, day: date):
         """Get all feedings for a specific user on a specific day"""
-        # Convert date to string in ISO format for the query
-        day_str = day.isoformat()
+        try:
+            # Convert date to string in ISO format for the query
+            day_str = day.isoformat()
+            
+            # Calculate next day for end range
+            from datetime import timedelta
+            next_day = day + timedelta(days=1)
+            next_day_str = next_day.isoformat()
 
-        # Query feeds for this user on this day
-        response = (
-            self.supabase.table("feeds")
-            .select("*")
-            .eq("user_id", user_id)
-            .gte("created_at", f"{day_str}T00:00:00")
-            .lt("created_at", f"{day_str}T23:59:59")
-            .execute()
-        )
-        
-        return response.data
+            # Query feeds for this user on this day
+            response = (
+                self.supabase.table("feeds")
+                .select("*")
+                .eq("user_id", user_id)
+                .gte("created_at", f"{day_str}T00:00:00")
+                .lt("created_at", f"{next_day_str}T00:00:00")
+                .execute()
+            )
+            
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error getting daily feeds: {e}")
+            return []
 
     def set_user_timezone(self, user_id: int, timezone: str):
         """Set or update the timezone for a user"""

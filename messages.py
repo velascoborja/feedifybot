@@ -25,6 +25,7 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Today's feeding report:\n\n🍼 Total feeds: {n_feeds}\n📏 Total volume: {total} ml\n⏰ Average per feed: {average} ml\n\n⭐ Keep up the great work!",
         "today_no_feeds": "📅 Today's report:\n\n🍼 No feeds logged yet today.\n💡 Use /feed <ml> to log your first bottle!",
+        "today_error": "😔 Sorry, there was an error getting today's summary. Please try again.",
         
         # Setup command
         "setup_menu": "⚙️ Bot Setup\n\nChoose what you want to configure:",
@@ -60,6 +61,7 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Reporte de alimentación de hoy:\n\n🍼 Total de tomas: {n_feeds}\n📏 Volumen total: {total} ml\n⏰ Promedio por toma: {average} ml\n\n⭐ ¡Sigue así de bien!",
         "today_no_feeds": "📅 Reporte de hoy:\n\n🍼 Aún no has registrado tomas hoy.\n💡 ¡Usa /feed <ml> para registrar tu primer biberón!",
+        "today_error": "😔 Lo siento, hubo un error al obtener el resumen de hoy. Por favor, inténtalo de nuevo.",
         
         # Setup command
         "setup_menu": "⚙️ Configuración del Bot\n\nElige qué quieres configurar:",
@@ -95,6 +97,7 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Rapport d'alimentation d'aujourd'hui:\n\n🍼 Total d'alimentations: {n_feeds}\n📏 Volume total: {total} ml\n⏰ Moyenne par alimentation: {average} ml\n\n⭐ Continuez comme ça!",
         "today_no_feeds": "📅 Rapport d'aujourd'hui:\n\n🍼 Aucune alimentation enregistrée aujourd'hui.\n💡 Utilisez /feed <ml> pour enregistrer votre premier biberon!",
+        "today_error": "😔 Désolé, il y a eu une erreur pour obtenir le résumé d'aujourd'hui. Veuillez réessayer.",
         
         # Setup command
         "setup_menu": "⚙️ Configuration du Bot\n\nChoisissez ce que vous voulez configurer:",
@@ -130,6 +133,7 @@ MESSAGES = {
         # Today command
         "today_with_feeds": "📅 Rapporto alimentazione di oggi:\n\n🍼 Totale alimentazioni: {n_feeds}\n📏 Volume totale: {total} ml\n⏰ Media per alimentazione: {average} ml\n\n⭐ Continua così!",
         "today_no_feeds": "📅 Rapporto di oggi:\n\n🍼 Nessuna alimentazione registrata oggi.\n💡 Usa /feed <ml> per registrare il tuo primo biberon!",
+        "today_error": "😔 Spiacente, c'è stato un errore nell'ottenere il riassunto di oggi. Riprova.",
         
         # Setup command
         "setup_menu": "⚙️ Configurazione Bot\n\nScegli cosa vuoi configurare:",

@@ -178,7 +178,12 @@ async def today_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         # Get today's feeds for the user
         feeds = supabase.get_daily_feeds(update.effective_user.id, date.today())
-        total = sum(f["amount_ml"] for f in feeds)
+        
+        # Ensure feeds is a list
+        if feeds is None:
+            feeds = []
+            
+        total = sum(f.get("amount_ml", 0) for f in feeds)
         n_feeds = len(feeds)
         
         if n_feeds > 0:
@@ -196,7 +201,7 @@ async def today_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
     except Exception as e:
         logger.error(f"Error getting today's summary for user {update.effective_user.id}: {e}")
-        message = get_message(user_lang, "feed_error")
+        message = get_message(user_lang, "today_error")
         await update.message.reply_text(message)
 
 
