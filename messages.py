@@ -3,90 +3,90 @@
 MESSAGES = {
     "en": {
         # Start command
-        "start_message": "Hi! Use /feed <ml> to log a bottle.\n\nYou can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)",
+        "start_message": "👋 Hi! Use /feed <ml> to log a bottle 🍼\n\n⏰ You can also set your timezone with /timezone <timezone> (e.g., /timezone Europe/Madrid)",
         
         # Feed command
-        "feed_usage": "Usage: /feed <ml> (example: /feed 120)",
-        "feed_invalid_number": "Value must be an integer. Example: /feed 120",
-        "feed_logged": "Feed logged: {amount_ml} ml",
-        "feed_error": "Sorry, there was an error logging your feed. Please try again.",
+        "feed_usage": "📝 Usage: /feed <ml> (example: /feed 120)",
+        "feed_invalid_number": "❌ Value must be an integer. Example: /feed 120",
+        "feed_logged": "✅ Feed logged: {amount_ml} ml 🍼",
+        "feed_error": "😔 Sorry, there was an error logging your feed. Please try again.",
         
         # Timezone command
-        "timezone_current": "Your current timezone is: {timezone}",
-        "timezone_not_set": "You haven't set a timezone. Using default: Europe/Madrid\n\nTo set your timezone, use: /timezone <timezone>\nExample: /timezone America/New_York",
-        "timezone_invalid": "Invalid timezone: {timezone}\n\nPlease use a valid timezone like:\n- Europe/Madrid\n- America/New_York\n- Asia/Tokyo\n- UTC",
-        "timezone_set": "Timezone set to: {timezone}",
-        "timezone_error": "Sorry, there was an error setting your timezone. Please try again.",
+        "timezone_current": "🌍 Your current timezone is: {timezone}",
+        "timezone_not_set": "⏰ You haven't set a timezone. Using default: Europe/Madrid\n\n🔧 To set your timezone, use: /timezone <timezone>\n📍 Example: /timezone America/New_York",
+        "timezone_invalid": "❌ Invalid timezone: {timezone}\n\n✅ Please use a valid timezone like:\n🌍 Europe/Madrid\n🌎 America/New_York\n🌏 Asia/Tokyo\n🌐 UTC",
+        "timezone_set": "✅ Timezone set to: {timezone} 🌍",
+        "timezone_error": "😔 Sorry, there was an error setting your timezone. Please try again.",
         
         # Daily summary
-        "summary_with_feeds": "Today's summary:\nFeeds: {n_feeds}\nTotal: {total} ml",
-        "summary_no_feeds": "You haven't logged any feeds today.",
+        "summary_with_feeds": "📊 Today's summary:\n🍼 Feeds: {n_feeds}\n📏 Total: {total} ml",
+        "summary_no_feeds": "📅 You haven't logged any feeds today. 🍼",
     },
     
     "es": {
         # Start command
-        "start_message": "¡Hola! Usa /feed <ml> para registrar un biberón.\n\nTambién puedes configurar tu zona horaria con /timezone <timezone> (ej: /timezone Europe/Madrid)",
+        "start_message": "👋 ¡Hola! Usa /feed <ml> para registrar un biberón 🍼\n\n⏰ También puedes configurar tu zona horaria con /timezone <timezone> (ej: /timezone Europe/Madrid)",
         
         # Feed command
-        "feed_usage": "Uso: /feed <ml> (ejemplo: /feed 120)",
-        "feed_invalid_number": "El valor debe ser un número entero. Ejemplo: /feed 120",
-        "feed_logged": "Alimentación registrada: {amount_ml} ml",
-        "feed_error": "Lo siento, hubo un error al registrar tu alimentación. Por favor, inténtalo de nuevo.",
+        "feed_usage": "📝 Uso: /feed <ml> (ejemplo: /feed 120)",
+        "feed_invalid_number": "❌ El valor debe ser un número entero. Ejemplo: /feed 120",
+        "feed_logged": "✅ Alimentación registrada: {amount_ml} ml 🍼",
+        "feed_error": "😔 Lo siento, hubo un error al registrar tu alimentación. Por favor, inténtalo de nuevo.",
         
         # Timezone command
-        "timezone_current": "Tu zona horaria actual es: {timezone}",
-        "timezone_not_set": "No has configurado una zona horaria. Usando por defecto: Europe/Madrid\n\nPara configurar tu zona horaria, usa: /timezone <timezone>\nEjemplo: /timezone America/New_York",
-        "timezone_invalid": "Zona horaria inválida: {timezone}\n\nPor favor usa una zona horaria válida como:\n- Europe/Madrid\n- America/New_York\n- Asia/Tokyo\n- UTC",
-        "timezone_set": "Zona horaria configurada: {timezone}",
-        "timezone_error": "Lo siento, hubo un error al configurar tu zona horaria. Por favor, inténtalo de nuevo.",
+        "timezone_current": "🌍 Tu zona horaria actual es: {timezone}",
+        "timezone_not_set": "⏰ No has configurado una zona horaria. Usando por defecto: Europe/Madrid\n\n🔧 Para configurar tu zona horaria, usa: /timezone <timezone>\n📍 Ejemplo: /timezone America/New_York",
+        "timezone_invalid": "❌ Zona horaria inválida: {timezone}\n\n✅ Por favor usa una zona horaria válida como:\n🌍 Europe/Madrid\n🌎 America/New_York\n🌏 Asia/Tokyo\n🌐 UTC",
+        "timezone_set": "✅ Zona horaria configurada: {timezone} 🌍",
+        "timezone_error": "😔 Lo siento, hubo un error al configurar tu zona horaria. Por favor, inténtalo de nuevo.",
         
         # Daily summary
-        "summary_with_feeds": "Resumen de hoy:\nTomas: {n_feeds}\nTotal: {total} ml",
-        "summary_no_feeds": "Hoy no has registrado ninguna alimentación.",
+        "summary_with_feeds": "📊 Resumen de hoy:\n🍼 Tomas: {n_feeds}\n📏 Total: {total} ml",
+        "summary_no_feeds": "📅 Hoy no has registrado ninguna alimentación. 🍼",
     },
     
     "fr": {
         # Start command
-        "start_message": "Salut! Utilisez /feed <ml> pour enregistrer un biberon.\n\nVous pouvez aussi définir votre fuseau horaire avec /timezone <timezone> (ex: /timezone Europe/Paris)",
+        "start_message": "👋 Salut! Utilisez /feed <ml> pour enregistrer un biberon 🍼\n\n⏰ Vous pouvez aussi définir votre fuseau horaire avec /timezone <timezone> (ex: /timezone Europe/Paris)",
         
         # Feed command
-        "feed_usage": "Usage: /feed <ml> (exemple: /feed 120)",
-        "feed_invalid_number": "La valeur doit être un nombre entier. Exemple: /feed 120",
-        "feed_logged": "Alimentation enregistrée: {amount_ml} ml",
-        "feed_error": "Désolé, il y a eu une erreur lors de l'enregistrement. Veuillez réessayer.",
+        "feed_usage": "📝 Usage: /feed <ml> (exemple: /feed 120)",
+        "feed_invalid_number": "❌ La valeur doit être un nombre entier. Exemple: /feed 120",
+        "feed_logged": "✅ Alimentation enregistrée: {amount_ml} ml 🍼",
+        "feed_error": "😔 Désolé, il y a eu une erreur lors de l'enregistrement. Veuillez réessayer.",
         
         # Timezone command
-        "timezone_current": "Votre fuseau horaire actuel est: {timezone}",
-        "timezone_not_set": "Vous n'avez pas défini de fuseau horaire. Utilisation par défaut: Europe/Madrid\n\nPour définir votre fuseau horaire, utilisez: /timezone <timezone>\nExemple: /timezone America/New_York",
-        "timezone_invalid": "Fuseau horaire invalide: {timezone}\n\nVeuillez utiliser un fuseau horaire valide comme:\n- Europe/Paris\n- America/New_York\n- Asia/Tokyo\n- UTC",
-        "timezone_set": "Fuseau horaire défini: {timezone}",
-        "timezone_error": "Désolé, il y a eu une erreur lors de la configuration du fuseau horaire. Veuillez réessayer.",
+        "timezone_current": "🌍 Votre fuseau horaire actuel est: {timezone}",
+        "timezone_not_set": "⏰ Vous n'avez pas défini de fuseau horaire. Utilisation par défaut: Europe/Madrid\n\n🔧 Pour définir votre fuseau horaire, utilisez: /timezone <timezone>\n📍 Exemple: /timezone America/New_York",
+        "timezone_invalid": "❌ Fuseau horaire invalide: {timezone}\n\n✅ Veuillez utiliser un fuseau horaire valide comme:\n🌍 Europe/Paris\n🌎 America/New_York\n🌏 Asia/Tokyo\n🌐 UTC",
+        "timezone_set": "✅ Fuseau horaire défini: {timezone} 🌍",
+        "timezone_error": "😔 Désolé, il y a eu une erreur lors de la configuration du fuseau horaire. Veuillez réessayer.",
         
         # Daily summary
-        "summary_with_feeds": "Résumé d'aujourd'hui:\nAlimentations: {n_feeds}\nTotal: {total} ml",
-        "summary_no_feeds": "Vous n'avez enregistré aucune alimentation aujourd'hui.",
+        "summary_with_feeds": "📊 Résumé d'aujourd'hui:\n🍼 Alimentations: {n_feeds}\n📏 Total: {total} ml",
+        "summary_no_feeds": "📅 Vous n'avez enregistré aucune alimentation aujourd'hui. 🍼",
     },
     
     "it": {
         # Start command
-        "start_message": "Ciao! Usa /feed <ml> per registrare un biberon.\n\nPuoi anche impostare il tuo fuso orario con /timezone <timezone> (es: /timezone Europe/Rome)",
+        "start_message": "👋 Ciao! Usa /feed <ml> per registrare un biberon 🍼\n\n⏰ Puoi anche impostare il tuo fuso orario con /timezone <timezone> (es: /timezone Europe/Rome)",
         
         # Feed command
-        "feed_usage": "Uso: /feed <ml> (esempio: /feed 120)",
-        "feed_invalid_number": "Il valore deve essere un numero intero. Esempio: /feed 120",
-        "feed_logged": "Alimentazione registrata: {amount_ml} ml",
-        "feed_error": "Spiacente, c'è stato un errore nel registrare la tua alimentazione. Riprova.",
+        "feed_usage": "📝 Uso: /feed <ml> (esempio: /feed 120)",
+        "feed_invalid_number": "❌ Il valore deve essere un numero intero. Esempio: /feed 120",
+        "feed_logged": "✅ Alimentazione registrata: {amount_ml} ml 🍼",
+        "feed_error": "😔 Spiacente, c'è stato un errore nel registrare la tua alimentazione. Riprova.",
         
         # Timezone command
-        "timezone_current": "Il tuo fuso orario attuale è: {timezone}",
-        "timezone_not_set": "Non hai impostato un fuso orario. Uso predefinito: Europe/Madrid\n\nPer impostare il tuo fuso orario, usa: /timezone <timezone>\nEsempio: /timezone America/New_York",
-        "timezone_invalid": "Fuso orario non valido: {timezone}\n\nUsa un fuso orario valido come:\n- Europe/Rome\n- America/New_York\n- Asia/Tokyo\n- UTC",
-        "timezone_set": "Fuso orario impostato: {timezone}",
-        "timezone_error": "Spiacente, c'è stato un errore nell'impostare il fuso orario. Riprova.",
+        "timezone_current": "🌍 Il tuo fuso orario attuale è: {timezone}",
+        "timezone_not_set": "⏰ Non hai impostato un fuso orario. Uso predefinito: Europe/Madrid\n\n🔧 Per impostare il tuo fuso orario, usa: /timezone <timezone>\n📍 Esempio: /timezone America/New_York",
+        "timezone_invalid": "❌ Fuso orario non valido: {timezone}\n\n✅ Usa un fuso orario valido come:\n🌍 Europe/Rome\n🌎 America/New_York\n🌏 Asia/Tokyo\n🌐 UTC",
+        "timezone_set": "✅ Fuso orario impostato: {timezone} 🌍",
+        "timezone_error": "😔 Spiacente, c'è stato un errore nell'impostare il fuso orario. Riprova.",
         
         # Daily summary
-        "summary_with_feeds": "Riepilogo di oggi:\nAlimentazioni: {n_feeds}\nTotale: {total} ml",
-        "summary_no_feeds": "Non hai registrato nessuna alimentazione oggi.",
+        "summary_with_feeds": "📊 Riepilogo di oggi:\n🍼 Alimentazioni: {n_feeds}\n📏 Totale: {total} ml",
+        "summary_no_feeds": "📅 Non hai registrato nessuna alimentazione oggi. 🍼",
     }
 }
 
