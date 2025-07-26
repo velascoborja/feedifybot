@@ -90,7 +90,7 @@ async def send_daily_summary(context: ContextTypes.DEFAULT_TYPE):
 
 
 # ---------------------- Main ----------------------
-async def main():
+def main():
     app = (
         ApplicationBuilder()
         .token(TELEGRAM_BOT_TOKEN)
@@ -105,8 +105,9 @@ async def main():
     # Jobs: daily summary at 21:00 Europe/Madrid
     app.job_queue.run_daily(send_daily_summary, time=time(hour=21, minute=0, tzinfo=TZ))
 
-    await app.run_polling()
+    logger.info("Starting bot...")
+    app.run_polling()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
