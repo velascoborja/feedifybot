@@ -9,6 +9,7 @@ MESSAGES = {
         "feed_usage": "📝 Usage: /feed <ml> (example: /feed 120)",
         "feed_invalid_number": "❌ Value must be an integer. Example: /feed 120",
         "feed_logged": "✅ Feed logged: {amount_ml} ml 🍼",
+        "feed_logged_with_summary": "✅ Feed logged: {amount_ml} ml 🍼\n\n📊 Today's summary:\n🍼 Total feeds: {n_feeds}\n📏 Total volume: {total} ml\n⏰ Average per feed: {average} ml",
         "feed_error": "😔 Sorry, there was an error logging your feed. Please try again.",
         
         # Timezone command
@@ -45,6 +46,7 @@ MESSAGES = {
         "feed_usage": "📝 Uso: /feed <ml> (ejemplo: /feed 120)",
         "feed_invalid_number": "❌ El valor debe ser un número entero. Ejemplo: /feed 120",
         "feed_logged": "✅ Alimentación registrada: {amount_ml} ml 🍼",
+        "feed_logged_with_summary": "✅ Alimentación registrada: {amount_ml} ml 🍼\n\n📊 Resumen de hoy:\n🍼 Total de tomas: {n_feeds}\n📏 Volumen total: {total} ml\n⏰ Promedio por toma: {average} ml",
         "feed_error": "😔 Lo siento, hubo un error al registrar tu alimentación. Por favor, inténtalo de nuevo.",
         
         # Timezone command
@@ -81,6 +83,7 @@ MESSAGES = {
         "feed_usage": "📝 Usage: /feed <ml> (exemple: /feed 120)",
         "feed_invalid_number": "❌ La valeur doit être un nombre entier. Exemple: /feed 120",
         "feed_logged": "✅ Alimentation enregistrée: {amount_ml} ml 🍼",
+        "feed_logged_with_summary": "✅ Alimentation enregistrée: {amount_ml} ml 🍼\n\n📊 Résumé d'aujourd'hui:\n🍼 Total d'alimentations: {n_feeds}\n📏 Volume total: {total} ml\n⏰ Moyenne par alimentation: {average} ml",
         "feed_error": "😔 Désolé, il y a eu une erreur lors de l'enregistrement. Veuillez réessayer.",
         
         # Timezone command
@@ -117,6 +120,7 @@ MESSAGES = {
         "feed_usage": "📝 Uso: /feed <ml> (esempio: /feed 120)",
         "feed_invalid_number": "❌ Il valore deve essere un numero intero. Esempio: /feed 120",
         "feed_logged": "✅ Alimentazione registrata: {amount_ml} ml 🍼",
+        "feed_logged_with_summary": "✅ Alimentazione registrata: {amount_ml} ml 🍼\n\n📊 Riassunto di oggi:\n🍼 Totale alimentazioni: {n_feeds}\n📏 Volume totale: {total} ml\n⏰ Media per alimentazione: {average} ml",
         "feed_error": "😔 Spiacente, c'è stato un errore nel registrare la tua alimentazione. Riprova.",
         
         # Timezone command

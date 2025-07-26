@@ -121,9 +121,31 @@ async def feed(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         supabase.register_feed(update.effective_user.id, amount_ml)
-        message = get_message(user_lang, "feed_logged", amount_ml=amount_ml)
+        
+        # Get today's feeds including the new one
+        feeds = supabase.get_daily_feeds(update.effective_user.id, date.today())
+        
+        # Ensure feeds is a list and calculate totals
+        if feeds is None:
+            feeds = []
+            
+        total = sum(f.get("amount_ml", 0) for f in feeds)
+        n_feeds = len(feeds)
+        
+        # Create confirmation message with daily summary
+        if n_feeds > 0:
+            average = round(total / n_feeds, 1)
+            message = get_message(user_lang, "feed_logged_with_summary", 
+                                amount_ml=amount_ml,
+                                n_feeds=n_feeds,
+                                total=total,
+                                average=average)
+        else:
+            # Fallback to simple confirmation if summary fails
+            message = get_message(user_lang, "feed_logged", amount_ml=amount_ml)
+        
         await update.message.reply_text(message)
-        logger.info(f"Feed logged: {amount_ml} ml for user {update.effective_user.id}")
+        logger.info(f"Feed logged: {amount_ml} ml for user {update.effective_user.id}. Daily total: {total} ml ({n_feeds} feeds)")
     except Exception as e:
         logger.error(f"Error logging feed: {e}")
         message = get_message(user_lang, "feed_error")
