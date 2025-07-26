@@ -26,24 +26,45 @@ class SupabaseClient:
             # Convert date to string in ISO format for the query
             day_str = day.isoformat()
             
-            # Calculate next day for end range
-            from datetime import timedelta
-            next_day = day + timedelta(days=1)
-            next_day_str = next_day.isoformat()
-
-            # Query feeds for this user on this day
+            # Get all feeds for this user
             response = (
                 self.supabase.table("feeds")
                 .select("*")
                 .eq("user_id", user_id)
-                .gte("created_at", f"{day_str}T00:00:00")
-                .lt("created_at", f"{next_day_str}T00:00:00")
+                .execute()
+            )
+            
+            all_feeds = response.data if response.data else []
+            
+            # Filter by date in Python to avoid timezone issues
+            today_feeds = []
+            for feed in all_feeds:
+                created_at = feed.get('created_at', '')
+                if created_at:
+                    # Extract just the date part (YYYY-MM-DD)
+                    feed_date = created_at.split('T')[0] if 'T' in created_at else created_at.split(' ')[0]
+                    if feed_date == day_str:
+                        today_feeds.append(feed)
+            
+            return today_feeds
+        except Exception as e:
+            print(f"Error getting daily feeds: {e}")
+            return []
+
+    def get_all_user_feeds(self, user_id: int):
+        """Get all feeds for a user (for debugging)"""
+        try:
+            response = (
+                self.supabase.table("feeds")
+                .select("*")
+                .eq("user_id", user_id)
+                .order("created_at", desc=True)
                 .execute()
             )
             
             return response.data if response.data else []
         except Exception as e:
-            print(f"Error getting daily feeds: {e}")
+            print(f"Error getting all user feeds: {e}")
             return []
 
     def set_user_timezone(self, user_id: int, timezone: str):
